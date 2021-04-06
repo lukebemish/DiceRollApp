@@ -34,11 +34,14 @@ async def on_message(message):
     if message.author == client.user:
         return
         
+    if message.channel.name != "rolls":
+        return
+        
     if (message.content.startswith("!rhelp")):
         await message.author.create_dm()
         await message.author.dm_channel.send("To roll dice, type something like `!r 2d10+2`")
         await message.author.dm_channel.send("Use `+`, `-`, `adv`, `dis`, `advantage`, or `disadvantage` to add advantage or disadvantage, as in `!r + d20 + 2`")
-        await message.author.dm_channel.send("Use `!rd` instead or `!r` for damage rolls, which allows for explosions")
+        await message.author.dm_channel.send("For damage rolls, use `!rd` instead or `!r`, which allows for explosions")
     
     if (message.content.startswith(listen_val) or (message.content.startswith(explode_val))):
         rest = ""
@@ -72,8 +75,8 @@ async def on_message(message):
             
             allRest = re.sub(' +', ' ', allRest)
             
-            print(allRest)
-            print(rest)
+            #print(allRest)
+            #print(rest)
             
             if (len(allRest) > 0):
                 strParts = []
@@ -162,7 +165,10 @@ async def on_message(message):
                     #print(isCrit)
                     #print(isCritFail)
                     uName = getRealName(message)
-                    tTotal = "*"+uName+" roll"
+                    if (not explodes):
+                        tTotal = "*"+uName+" roll"
+                    else:
+                        tTotal = "*"+uName+" roll (exploding)"
                     if text != "":
                         tTotal += " for " + text
                     if adv:
